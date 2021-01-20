@@ -1,0 +1,211 @@
+@import url("/font/stylesheet.css");
+
+p{
+    margin: 0;
+}
+
+body{
+    padding: 0;
+    margin: 0;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    font-family: 'Intro';
+    touch-action: manipulation;
+}
+.drawArea{
+    width: 400px;
+    height: 850px;
+    position: relative;
+    transform-origin: center top;
+}
+.background{
+    background: linear-gradient(165.07deg, #BA2E2E 0%, #700D0D 100.78%); ;
+}
+.actionBackground{
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(165.07deg, #130505 0%, #e12020 100.78%); ;
+    background-size: contain;
+    position: relative;
+    overflow: hidden;
+}
+.nearlyStars, .distantStars{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.nearlyStars > div{
+    width: 100%;
+    height: 100%;
+    background-image: url('StarsLarge.png');
+}
+.distantStars > div{
+    width: 100%;
+    height: 100%;
+    background-image: url('StarsSmall.png');
+}
+.nearlyStars > div:nth-child(2),.distantStars > div:nth-child(2){
+    transform: scale(-1,1);
+}
+.nearlyStarsMoving{
+    animation: move 15s infinite linear;
+}
+.distantStarsMoving{
+    animation: move 55s infinite linear;
+}
+
+@keyframes move {
+    0%{
+        top:-200%
+    }
+    100%{
+        top: 0%
+    }
+}
+
+.drawArea > *{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0px;
+    top: 0px;
+}
+.drawArea > div{
+    width: 100%;
+    height: 100%;
+}
+.startScreen{
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.startScreen__caption{
+    text-align: center;
+    color: white;
+
+}
+
+.startScreen__caption-first{
+    font-weight: 400;
+    font-size: 30px;
+    margin-bottom: 20px;
+}
+
+.startScreen__caption-second{
+    font-weight: 800;
+    text-transform: uppercase;
+    line-height: 70px;
+    font-size: 70px;
+    margin-bottom: 80px;
+}
+
+.startScreen__button{
+    touch-action: manipulation;
+    height: 50px;
+    width: 300px;
+    border: none;
+    border-radius: 50px;
+    color: #700D0D;
+    background-color: #ffffff;
+    font-family: 'Intro';
+    font-size: 25px;
+    font-weight: 400;
+    transition: all .4s ease-in-out;
+}
+
+.startScreen__button:hover{
+    transform: scale(1.05);
+    color: white;
+    background-color: #7e1717;
+    box-shadow: 3px 3px 35px 14px rgb(255, 0, 0);
+}
+
+.startScreen__button:active{
+    transition: all .1s ease-in-out;
+    transform: scale(.97);
+}
+
+.gameInterface{
+   visibility: hidden;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+}
+
+.statusBar{
+    display: flex;
+    justify-content: center;
+    padding: 40px 30px;
+}
+
+.score{
+    color: white;
+    font-size: 50px;
+    font-weight: 800;
+    margin-top: -10px;
+}
+
+.lives{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.lives > .live{
+    height: 40px;
+    width: 40px;
+    background-image: url('heart.png');
+    background-size: contain;
+    margin-left: 10px;
+}
+
+.buttons{
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    padding-bottom: 80px;
+}
+
+.game-button {
+    height: 50px;
+    width: 150px;
+    border-radius: 50px;
+    border: none;
+    color: white;
+    transition: all .2s ease-in-out;
+    box-shadow: 3px 3px 35px 4px rgba(0,0,0,0.5);
+    overflow: hidden;
+}
+
+.game-button:hover{
+    transform: scale(1.05);
+}
+
+.game-button > p{
+    font-family: serif;
+    color: #700D0D;
+    font-size: 30px;
+}
+
+.left > p{
+    transform: rotate(-90deg);
+}
+
+.right > p{
+    transform: rotate(90deg);
+}
+
+
+

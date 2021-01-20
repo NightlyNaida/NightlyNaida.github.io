@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="drawArea">
+        <div class="background">
+            <div class="actionBackground">
+                <div style="top: 0px" class="nearlyStars nearlyStarsMoving">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+                <div class="distantStars distantStarsMoving">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+        <canvas class="action"></canvas>
+        <div class="interface">
+            <div class="startScreen">
+                <p class="startScreen__caption startScreen__caption-first">Продержись минуту</p>
+                <p class="startScreen__caption startScreen__caption-second">Получи фрибет</p>
+                <button class="startScreen__button">Легко, погнали</button>
+            </div>
+            <div class="gameInterface">
+                <div class="statusBar">
+                    <p class="score">1:00</p>
+                </div>
+                <div class="buttons">
+                    <button data-direction="left" click="leftGameButton" class="game-button left">
+                        <p>▲</p>
+                    </button>
+                    <button data-direction="right" class="game-button right">
+                        <p>▲</p>
+                    </button> 
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js" type="module"></script>
+</body>
+</html>
