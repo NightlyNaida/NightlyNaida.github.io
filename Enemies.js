@@ -1,6 +1,6 @@
 import anime from './animejs/lib/anime.es.js';
 
-let pathToImages = 'images/Enemies/';
+let pathToImages = 'Images/Enemies/';
 let object = { 
     Bob(){return new Enemy([60,68],`${pathToImages}Bob.png`,1)},
     Cucumber(){return new Enemy([55,63],`${pathToImages}Cucumber.png`,2)},
