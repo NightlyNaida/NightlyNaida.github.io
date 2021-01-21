@@ -14,8 +14,8 @@ body{
     touch-action: manipulation;
 }
 .drawArea{
-    width: 400px;
-    height: 850px;
+    width: 600px;
+    height: 600px;
     position: relative;
     transform-origin: center top;
 }
@@ -122,6 +122,7 @@ body{
     font-size: 25px;
     font-weight: 400;
     transition: all .4s ease-in-out;
+    box-shadow: 3px 3px 35px 4px rgba(0,0,0,0.5);
 }
 
 .startScreen__button:hover{
@@ -175,7 +176,7 @@ body{
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
-    padding-bottom: 80px;
+    padding-bottom: 20px;
 }
 
 .game-button {

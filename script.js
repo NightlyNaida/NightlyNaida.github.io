@@ -1,19 +1,17 @@
 import anime from './animejs/lib/anime.es.js';
 import enemies from './Enemies.js'
 
-let containerWidth = 400;
-let containerHeight = 850;
-
+let $drawArea = document.querySelector('.drawArea');
 
 function scaleDrawArea(){
-  let drawArea = document.querySelector('.drawArea');
+  //document.querySelector('.window-size').textContent = `${window.innerWidth} ; ${window.innerHeight}`;
+  let sizeOfDrawArea = getSizeOfDrawArea();
   let heightOWindow = window.innerHeight;
-  let heightOfDrawDrea = parseInt(getComputedStyle(drawArea).height);
-  let scaleValue = (heightOWindow / heightOfDrawDrea).toFixed(3);
-  drawArea.style.transform = `scale(${scaleValue})`;
+  let scaleValue = (heightOWindow / sizeOfDrawArea.height).toFixed(3);
+  $drawArea.style.transform = `scale(${scaleValue})`;
 }
-scaleDrawArea();
 window.addEventListener('resize',scaleDrawArea);
+window.addEventListener('load',scaleDrawArea);
 
 function startGeneratingEnemies(){
   anime({
@@ -26,7 +24,6 @@ function startGeneratingEnemies(){
 }
 
 function checkRocketsForStayingInGameArea(){
-  console.log(rockets);
   for(let i in rockets){
     if((rockets[i].y + rockets[i].height) < 0){
       rockets.splice(i,1);
@@ -76,7 +73,7 @@ function generateEnemy(){
   let enemiesKeysArray = Object.keys(enemies);
   let enemyKey = enemiesKeysArray[anime.random(0,enemiesKeysArray.length-1)];
   let enemy = enemies[enemyKey].call();
-  enemy.x = anime.random(0 + enemy.width, canvasWidth - enemy.width);
+  enemy.x = anime.random(0 + enemy.width, canvas.width - enemy.width);
   allEnemies.push(enemy);
 }
 
@@ -90,10 +87,10 @@ function drawEnemies(){
 
 let canvas = document.querySelector('canvas');
 let canvasContext = canvas.getContext('2d');
-let canvasWidth = 400;
 function setSizeForCanvas() {
-    canvas.width = canvasWidth;
-    canvas.height = containerHeight;
+    let drawAreaSize = getSizeOfDrawArea();
+    canvas.width = drawAreaSize.width;
+    canvas.height = drawAreaSize.height;
 }
 
 let rocketImage = new Image();
@@ -140,8 +137,8 @@ img.src = 'spaceShip.png';
 let spaceship = {
   width: 70,
   height: 95, 
-  x: containerWidth / 2 - 90 / 2,
-  y: 1000,
+  x: canvas.width / 2 - 90 / 2,
+  y: 800,
   image: img,
   draw(){
     canvasContext.drawImage(this.image,this.x,this.y,this.width,this.height);
@@ -149,7 +146,7 @@ let spaceship = {
   checkPotentialDirection(x,y){
     let potentiaRightSide = this.x + x + this.width;
     let potentiaLeftSide = this.x + x;
-    return (potentiaLeftSide > 0 && potentiaRightSide < canvasWidth);
+    return (potentiaLeftSide > 0 && potentiaRightSide < canvas.width);
   },
   move(x,y){
     if(this.checkPotentialDirection(x,y)){
@@ -182,7 +179,7 @@ function showActionBackground(){
 function startSpaceship(){
   anime({
     targets: spaceship,
-    y: 650,
+    y: canvas.height - 95 - 100,
     duration: 1000,
     easing: 'easeOutQuad' 
   })
@@ -297,6 +294,14 @@ function showGameInterface(){
     duration: 1000,
     easing: 'easeInOutExpo'
   })
+}
+
+function getSizeOfDrawArea(){
+  let drawAreaStyle = getComputedStyle($drawArea);
+  return {
+    width: parseInt(drawAreaStyle.width),
+    height: parseInt(drawAreaStyle.height)
+  }
 }
 
 
