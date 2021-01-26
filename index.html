@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="drawArea">
+    <div class="canvas-container">
         <div class="background">
             <div class="actionBackground">
                 <div style="top: 0px" class="nearlyStars nearlyStarsMoving">
@@ -22,16 +22,18 @@
                 </div>
             </div>
         </div>
-        <canvas class="action"></canvas>
+        <canvas width="500" height="1000" class="action" style="opacity: 0;"></canvas>
         <div class="interface">
             <div class="startScreen">
+                <img src="Images/logo.png" alt="" class="logo">
                 <p class="startScreen__caption startScreen__caption-first">Продержись минуту</p>
                 <p class="startScreen__caption startScreen__caption-second">Получи фрибет</p>
+                <img class="startScreen__500" src="Images/500.png" alt="500₽">
                 <button class="startScreen__button">Легко, погнали</button>
             </div>
-            <div class="gameInterface">
+            <div class="gameInterface" style="opacity: 0;">
                 <div class="statusBar">
-                    <p class="score">1:00</p>
+                    <p id="timer" class="timer">1:00</p>
                 </div>
                 <div class="buttons">
                     <button data-direction="left" click="leftGameButton" class="game-button left">
@@ -42,8 +44,16 @@
                     </button> 
                 </div>
             </div>
+            <div class="finish-screen" style="top: -200px; opacity: 0;">
+                <img src="Images/logo.png" alt="" class="logo">
+                <p class="finish-screen__caption"></p>
+                <p class="finish-screen__text"></p>
+                <button id='freebet' class="startScreen__button">Забрать фрибет</button>
+                <button id='restart' class="startScreen__button">Играть заново</button>
+            </div>
         </div>
     </div>
+    <script src="anime.min.js"></script>
     <script src="script.js" type="module"></script>
 </body>
 </html>

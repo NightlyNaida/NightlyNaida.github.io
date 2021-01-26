@@ -1,108 +1,217 @@
-import anime from './animejs/lib/anime.es.js';
-import enemies from './Enemies.js'
+import enemies from './Enemies.js';
+import spaceship from './spaceship.js';
+import timer from './timer.js';
 
-let $drawArea = document.querySelector('.drawArea');
 
-function scaleDrawArea(){
-  //document.querySelector('.window-size').textContent = `${window.innerWidth} ; ${window.innerHeight}`;
-  let sizeOfDrawArea = getSizeOfDrawArea();
-  let heightOWindow = window.innerHeight;
-  let scaleValue = (heightOWindow / sizeOfDrawArea.height).toFixed(3);
-  $drawArea.style.transform = `scale(${scaleValue})`;
+let $sizeOfContent = {
+  width: 500,
+  height: 1000,
 }
-window.addEventListener('resize',scaleDrawArea);
-window.addEventListener('load',scaleDrawArea);
+spaceship.moveToCenter($sizeOfContent.width);
+let $canvasContainer = document.querySelector('.canvas-container');
+let $canvas = document.querySelector('canvas');
+let $canvasContext = $canvas.getContext('2d');
+let $timer = null;
+let isWin = true;
 
-function startGeneratingEnemies(){
+window.addEventListener('resize',resizeCanvasContainerAndScaleContent);
+window.addEventListener('load',resizeCanvasContainerAndScaleContent);
+
+function resizeCanvasContainerAndScaleContent(){
+  let ratio = 1 / 2;
+  $canvasContainer.style.height = `${window.innerHeight}px`;
+  $canvasContainer.style.width = `${window.innerHeight * ratio}px`;
+
+  let scaleValueForContent = window.innerHeight / $sizeOfContent.height;
+  scaleContent(scaleValueForContent);
+}
+
+
+function scaleContent(value){
+  let items = Array.from(document.querySelectorAll('.canvas-container > *'));
+  for (let i in items){
+    items[i].style.transform = `scale(${value})`;
+  }
+}
+
+
+function stopGame(){
+  clearInterval($timer);
+  if(isWin){
+    setWinFinishScreen();
+  }
+  else{
+    setLoseFinishScreen();
+  }
+  canvasAnimationController.restart();
+  gameControlAnimationController.restart();
+  actionBackgroundAnimationController.restart();
+  canvasRepaintController.pause();
+  enemyGenerator.pause();
+  finishScreenAnimationController.restart();
+  rocketsGenerator.pause();
+}
+
+function restartGame(){
+  finishScreenAnimationController.restart();
+  startGame();
+}
+
+function startGame(){
+  allEnemies = [];
+  rockets = [];
+  explosions = [];
+  $canvasContext.clearRect(0,0,$sizeOfContent.width,$sizeOfContent.height);
+  canvasAnimationController.restart();
+  gameControlAnimationController.restart();
+  actionBackgroundAnimationController.restart();
+  spawnSpaceshipAndLaunchRockets();
+  canvasRepaintController.restart();
+  enemyGenerator.restart();
+  var deadline = new Date(Date.parse(new Date()) + 60 * 1000);
+  $timer = timer('timer', deadline, stopGame);
+  speedOfEnemies = 1;
+}
+
+let startScreenAnimationController = anime({
+  autoplay: false,
+  targets: '.startScreen',
+  easing: 'easeInOutCubic',
+  top: -200,
+  opacity: 0,
+  duration: 1500,
+  complete(){
+    this.reverse();
+  }
+})
+
+let finishScreenAnimationController = anime({
+  autoplay: false,
+  targets: '.finish-screen',
+  easing: 'easeInOutCubic',
+  top: 0,
+  opacity: 1,
+  duration: 1500,
+  complete(){
+    this.reverse();
+  }
+})
+
+
+let gameControlAnimationController = anime({
+  autoplay: false,
+  targets:'.gameInterface',
+  opacity: 1,
+  duration: 1000,
+  easing: 'easeInOutExpo',
+  complete(){
+    this.reverse();
+  }
+});
+
+let actionBackgroundAnimationController = anime({
+  autoplay: false,
+  targets: '.actionBackground',
+  opacity: 1,
+  easing: 'easeInOutCubic',
+  duration: 1500,
+  complete(){
+    this.reverse();
+  }
+})
+
+let canvasAnimationController = anime({
+  autoplay: false,
+  targets: '.action',
+  opacity: 1,
+  easing: 'easeInOutCubic',
+  duration: 1500,
+  complete(){
+    this.reverse();
+  }
+})
+
+let spaceShipSpawnAnimationController = anime({
+  autoplay: false,
+  targets: spaceship,
+  y: $canvas.height - 95 - 200,
+  duration: 1000,
+  easing: 'easeOutQuad'
+})
+
+
+
+function spawnSpaceshipAndLaunchRockets(){
+  spaceship.y = 1200;
+  spaceShipSpawnAnimationController.restart();
+  setTimeout(function(){rocketsGenerator.restart();},1000);
+}
+
+let canvasRepaintController = anime({
+    autoplay: false, 
+    duration: 10,
+    loop: true,
+    loopBegin: function() {
+      $canvasContext.clearRect(0,0,$sizeOfContent.width,$sizeOfContent.height);
+      moveRockets();
+      moveEnemies();
+      checkRocketsForStayingInGameArea();
+      drawRockets();
+      drawEnemies();
+      checkColision();
+      spaceship.draw($canvasContext); 
+      drawExplosions();
+      checkExplosionEnd();
+      speedOfEnemies += 0.002;
+    }
+});
+
+
+let allEnemies = [];
+
+let enemyGenerator = 
   anime({
-    duration: 1000,
+    autoplay: false,
+    duration: 1200,
     loop: true,
     loopBegin(){
       generateEnemy();
     }
-  })
-}
-
-function checkRocketsForStayingInGameArea(){
-  for(let i in rockets){
-    if((rockets[i].y + rockets[i].height) < 0){
-      rockets.splice(i,1);
-      break;
-    }
-  }
-}
-
-function checkColision(){
-    for (let i = 0; i < rockets.length; i++){
-      for(let j = 0; j < allEnemies.length; j++){
-        let boxRocket = {
-          position: [rockets[i].x, rockets[i].y],
-          size: [rockets[i].width, rockets[i].height]
-        }
-        let boxEnemy = {
-          position: [allEnemies[j].x, allEnemies[j].y],
-          size: [allEnemies[j].width, allEnemies[j].height]
-        }
-
-        if(boxCollides(boxRocket.position, boxRocket.size, boxEnemy.position, boxEnemy.size)){
-          rockets.splice(i,1);
-          allEnemies.splice(j,1);
-          explosions.push(new Explosion(boxEnemy.position));
-          break;
-        }
-      }
-    }
-}
+})
 
 
-function collides(x, y, r, b, x2, y2, r2, b2) {
-  return !(r <= x2 || x > r2 ||
-           b <= y2 || y > b2);
-}
-
-function boxCollides(pos, size, pos2, size2) {
-  return collides(pos[0], pos[1],
-                  pos[0] + size[0], pos[1] + size[1],
-                  pos2[0], pos2[1],
-                  pos2[0] + size2[0], pos2[1] + size2[1]);
-}
-
-
-let allEnemies = [];
 function generateEnemy(){
   let enemiesKeysArray = Object.keys(enemies);
   let enemyKey = enemiesKeysArray[anime.random(0,enemiesKeysArray.length-1)];
   let enemy = enemies[enemyKey].call();
-  enemy.x = anime.random(0 + enemy.width, canvas.width - enemy.width);
+  enemy.x = anime.random(0 + enemy.width, $canvas.width - enemy.width);
   allEnemies.push(enemy);
+}
+
+let speedOfEnemies = 1;
+function moveEnemies(){
+  for(let i in allEnemies){
+    allEnemies[i].move(speedOfEnemies);
+  }
 }
 
 function drawEnemies(){
   for(let i in allEnemies){
-    allEnemies[i].move();
-    allEnemies[i].draw(canvasContext);
+    allEnemies[i].draw($canvasContext);
   }
 }
 
-
-let canvas = document.querySelector('canvas');
-let canvasContext = canvas.getContext('2d');
-function setSizeForCanvas() {
-    let drawAreaSize = getSizeOfDrawArea();
-    canvas.width = drawAreaSize.width;
-    canvas.height = drawAreaSize.height;
-}
-
 let rocketImage = new Image();
-rocketImage.src = 'rocket.png';
-
+rocketImage.src = './Images/rocket.png';
 function Rocket(){
-  this.x = spaceship.x + spaceship.width /2 - 10;
+  this.x = spaceship.x + spaceship.width / 2;
   this.y = spaceship.y + 30;
   this.width = 15;
-  this.height = 45;
+  this.height = 35
+  ;
+  this.image = rocketImage;
   this.draw = function(){
-    canvasContext.drawImage(rocketImage,this.x,this.y,this.width,this.height);
+    $canvasContext.drawImage(this.image,this.x,this.y,this.width,this.height);
   }
 }
 let rockets = [];
@@ -121,73 +230,96 @@ function drawRockets(){
   }
 }
 
-function launchRockets(){
-  anime({
-    duration: 500,
-    loop: true,
-    loopBegin(){
-      rockets.push(new Rocket());
-    }
-  })
-}
+
+let rocketsGenerator = anime({
+  autoplay: false,
+  duration:500,
+  loop: true,
+  loopComplete(){
+    rockets.push(new Rocket());
+  }
+})
 
 
-let img = new Image();
-img.src = 'spaceShip.png';
-let spaceship = {
-  width: 70,
-  height: 95, 
-  x: canvas.width / 2 - 90 / 2,
-  y: 800,
-  image: img,
-  draw(){
-    canvasContext.drawImage(this.image,this.x,this.y,this.width,this.height);
-  },
-  checkPotentialDirection(x,y){
-    let potentiaRightSide = this.x + x + this.width;
-    let potentiaLeftSide = this.x + x;
-    return (potentiaLeftSide > 0 && potentiaRightSide < canvas.width);
-  },
-  move(x,y){
-    if(this.checkPotentialDirection(x,y)){
-      this.x += x;
-      this.y += y;
+function checkRocketsForStayingInGameArea(){
+  for(let i in rockets){
+    if((rockets[i].y + rockets[i].height) < 0){
+      rockets.splice(i,1);
+      break;
     }
   }
 }
 
-document.querySelector('.startScreen__button').addEventListener('click',startGame);
+function checkColision(){
+  for(let i in allEnemies){
+    if (allEnemies[i].y + allEnemies[i].height > $sizeOfContent.height){
+      isWin = false;
+      stopGame();
+      break;
+    }
+  }
 
-function startGame(){
-  startGeneratingEnemies();
-  hideStartScreen();
-  showActionBackground();
-  launchCanvasUpdate();
-  startSpaceship();
-  showGameInterface();
+  for (let i = 0; i < allEnemies.length; i++){
+    for(let j = 0; j < rockets.length; j++){
+      let boxEnemy = {
+        position: [allEnemies[i].x, allEnemies[i].y],
+        size: [allEnemies[i].width, allEnemies[i].height]
+      }
+      let boxRocket = {
+        position: [rockets[j].x, rockets[j].y],
+        size: [rockets[j].width, rockets[j].height]
+      }
+
+      if(boxCollides(boxEnemy.position,boxEnemy.size,[spaceship.x,spaceship.y],[spaceship.width,spaceship.height])){
+        explosions.push(new Explosion([spaceship.x,spaceship.y]));
+        isWin = false;
+        clearInterval($timer);
+        setTimeout(stopGame,1000);
+        break;
+      }
+
+      if(boxCollides(boxRocket.position, boxRocket.size, boxEnemy.position, boxEnemy.size)){
+        allEnemies.splice(i,1);
+        rockets.splice(j,1);
+        explosions.push(new Explosion(boxEnemy.position));
+        break;
+      }
+    }
+  }
 }
 
-function showActionBackground(){
-  anime({
-    targets: '.actionBackground',
-    opacity: 1,
-    easing: 'easeInOutCubic',
-    duration: 1500
-  })
+function boxCollides(pos, size, pos2, size2) {
+return collides(pos[0], pos[1],
+                pos[0] + size[0], pos[1] + size[1],
+                pos2[0], pos2[1],
+                pos2[0] + size2[0], pos2[1] + size2[1]);
 }
 
-function startSpaceship(){
-  anime({
-    targets: spaceship,
-    y: canvas.height - 95 - 100,
-    duration: 1000,
-    easing: 'easeOutQuad' 
-  })
-  setTimeout(launchRockets, 1000);
+function collides(x, y, r, b, x2, y2, r2, b2) {
+  return !(r <= x2 || x > r2 ||
+           b <= y2 || y > b2);
+}
+
+
+function setWinFinishScreen(){
+  let mainCaption = document.querySelector('.finish-screen__caption');
+  let text = document.querySelector('.finish-screen__text');
+
+  mainCaption.innerText = 'Круто!';
+  text.innerText = 'Да ты прирожденный чемпион. Забирай фрибет и побеждай на Олимпе!';
+}
+
+function setLoseFinishScreen(){
+  let mainCaption = document.querySelector('.finish-screen__caption');
+  let text = document.querySelector('.finish-screen__text');
+
+  mainCaption.innerText = 'Поражение';
+  text.innerHTML = 'Как сказал мудрец:<br><i>«Не повезло в мини-игре, повезёт в ставках на спорт...».</i><br>Забирай фрибет и побеждай на Олимпе!';
 }
 
 let explosionSprite = new Image();
 explosionSprite.src = 'Images/Explosion.png';
+let explosions = [];
 
 function Explosion(position){
   this.position = position;
@@ -199,7 +331,7 @@ function Explosion(position){
 Explosion.prototype = {
   image: explosionSprite,
   draw(){
-    canvasContext.drawImage(this.image,256*this.actualFrameColumn,248*this.actualFrameRow,256,248,
+    $canvasContext.drawImage(this.image,100*this.actualFrameColumn,96.8*this.actualFrameRow,100,96.8,
                             this.position[0] - this.size[0] / 2,this.position[1],this.size[0],this.size[1]);
     if(this.actualFrameColumn < 7){
       this.actualFrameColumn++;
@@ -210,8 +342,6 @@ Explosion.prototype = {
     }
   }
 }
-
-let explosions = [];
 
 function drawExplosions(){
   for(let i in explosions){
@@ -226,83 +356,43 @@ function checkExplosionEnd(){
   }
 }
 
-function launchCanvasUpdate(){
-let render = anime({ 
-    duration: 20,
-    loop: true,
-    loopBegin: function() {
-      canvasContext.clearRect(0,0,canvas.width,canvas.height);
-      moveRockets();
-      drawRockets();
-      spaceship.draw();
-      drawEnemies();
-      checkColision();
-      drawExplosions();
-      checkExplosionEnd();
-      checkRocketsForStayingInGameArea();
-    }
-  });
-}
-
-function hideStartScreen(){
-  anime({
-    autoplay: true,
-    targets: '.startScreen',
-    opacity: 0,
-    top: -200,
-    easing: 'easeInOutCubic',
-    duration: 1500,
-    complete(){
-      document.querySelector('.startScreen').style.visibility = 'hidden';
-    }
-  })
-}
-
 window.addEventListener('keydown', keyPress);
 function keyPress (e){
     switch(e.code){
-        case 'ArrowLeft': spaceship.move(-30,0); break;
-        case 'ArrowRight': spaceship.move(30,0); break;
+        case 'ArrowLeft': spaceship.move(-30,0,$sizeOfContent.width); break;
+        case 'ArrowRight': spaceship.move(30,0,$sizeOfContent.width); break;
     }
 }
 
-
-setSizeForCanvas();
-window.addEventListener('resize', setSizeForCanvas, false);
+document.querySelector('.startScreen__button').addEventListener('click',function(){
+  startScreenAnimationController.restart();
+  startGame();
+});
 
 function gameButtonClick(e){
   if(e.currentTarget.dataset.direction == 'left'){
-    spaceship.move(-30,0);
+    spaceship.move(-30,0,$sizeOfContent.width);
   }
   else{
-    spaceship.move(30,0);
+    spaceship.move(30,0,$sizeOfContent.width);
   }
 }
-
 
 let gameButtons = Array.from(document.querySelectorAll('.game-button'));
 for(let i in gameButtons){
   gameButtons[i].addEventListener('mousedown',gameButtonClick);
 }
 
-
-function showGameInterface(){
-  document.querySelector('.gameInterface').style.visibility = 'visible';
-  anime({
-    targets:'.gameInterface',
-    opacity: 1,
-    duration: 1000,
-    easing: 'easeInOutExpo'
-  })
+function openBonusSite(){
+  document.location.href = 'https://www.olimp.bet/welcome_bonus/';
 }
 
-function getSizeOfDrawArea(){
-  let drawAreaStyle = getComputedStyle($drawArea);
-  return {
-    width: parseInt(drawAreaStyle.width),
-    height: parseInt(drawAreaStyle.height)
-  }
-}
+document.querySelector('#restart').addEventListener('click',restartGame);
+document.querySelector('#freebet').addEventListener('click',openBonusSite);
+
+
+
+
 
 
 

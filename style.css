@@ -7,17 +7,20 @@ p{
 body{
     padding: 0;
     margin: 0;
-    position: relative;
-    display: flex;
-    justify-content: center;
     font-family: 'Intro';
-    touch-action: manipulation;
+
 }
-.drawArea{
-    width: 600px;
-    height: 600px;
-    position: relative;
-    transform-origin: center top;
+.canvas-container{
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    touch-action: manipulation;
+    overflow: hidden;
+    height: 1000px;
+    width: 500px;
 }
 .background{
     background: linear-gradient(165.07deg, #BA2E2E 0%, #700D0D 100.78%); ;
@@ -26,7 +29,7 @@ body{
     opacity: 0;
     height: 100%;
     width: 100%;
-    background: linear-gradient(165.07deg, #130505 0%, #e12020 100.78%); ;
+    background: linear-gradient(165.07deg, #130505 0%, #791212 100.78%); ;
     background-size: contain;
     position: relative;
     overflow: hidden;
@@ -41,12 +44,12 @@ body{
 .nearlyStars > div{
     width: 100%;
     height: 100%;
-    background-image: url('StarsLarge.png');
+    background-image: url('Images/StarsLarge.png');
 }
 .distantStars > div{
     width: 100%;
     height: 100%;
-    background-image: url('StarsSmall.png');
+    background-image: url('Images/StarsSmall.png');
 }
 .nearlyStars > div:nth-child(2),.distantStars > div:nth-child(2){
     transform: scale(-1,1);
@@ -67,33 +70,42 @@ body{
     }
 }
 
-.drawArea > *{
+.canvas-container > *{
     position: absolute;
-    height: 100%;
-    width: 100%;
     left: 0px;
     top: 0px;
+    transform-origin: left top;
+    height: 1000px;
+    width: 500px;
 }
-.drawArea > div{
-    width: 100%;
-    height: 100%;
-}
-.startScreen{
-    height: 100%;
-    width: 100%;
+
+.interface > div{
+    position: absolute;
     left: 0;
     top: 0;
-    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.startScreen{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
+.startScreen[style="top: -200px; opacity: 0;"]{
+    visibility: hidden;
+}
+
+.logo{
+    width: 180px;
+    margin-bottom: 100px;
+}
+
 .startScreen__caption{
     text-align: center;
     color: white;
-
 }
 
 .startScreen__caption-first{
@@ -105,21 +117,25 @@ body{
 .startScreen__caption-second{
     font-weight: 800;
     text-transform: uppercase;
-    line-height: 70px;
-    font-size: 70px;
-    margin-bottom: 80px;
+    line-height: 90px;
+    font-size: 90px;
+    margin-bottom: 20px;
+}
+
+.startScreen__500{
+    margin-bottom: 100px;
 }
 
 .startScreen__button{
     touch-action: manipulation;
-    height: 50px;
+    height: 80px;
     width: 300px;
     border: none;
     border-radius: 50px;
     color: #700D0D;
     background-color: #ffffff;
     font-family: 'Intro';
-    font-size: 25px;
+    font-size: 30px;
     font-weight: 400;
     transition: all .4s ease-in-out;
     box-shadow: 3px 3px 35px 4px rgba(0,0,0,0.5);
@@ -137,13 +153,52 @@ body{
     transform: scale(.97);
 }
 
+.finish-screen{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.finish-screen[style="top: -200px; opacity: 0;"]{
+    visibility: hidden;
+}
+
+.finish-screen__caption{
+    text-align: center;
+    color: white;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: 60px;
+    margin-bottom: 20px;
+}
+
+.finish-screen__text{
+    color: white;
+    text-align: center;
+    padding: 0 20px;
+    font-size: 22px;
+    margin-bottom: 50px;
+}
+
+#freebet{
+    margin-bottom: 30px;
+}
+
+#restart{
+    background-color: rgba(0, 0, 0, 0);
+    border: 2px solid white;
+    color: white;
+    margin-bottom: 30px;
+}
+
 .gameInterface{
-   visibility: hidden;
     opacity: 0;
-    width: 100%;
-    height: 100%;
     display: grid;
     grid-template-rows: 1fr 1fr;
+}
+.gameInterface[style="opacity: 0;"]{
+    visibility: hidden;
 }
 
 .statusBar{
@@ -152,24 +207,15 @@ body{
     padding: 40px 30px;
 }
 
-.score{
+.timer{
     color: white;
     font-size: 50px;
     font-weight: 800;
     margin-top: -10px;
 }
 
-.lives{
-    display: flex;
-    justify-content: flex-end;
-}
-
-.lives > .live{
-    height: 40px;
-    width: 40px;
-    background-image: url('heart.png');
-    background-size: contain;
-    margin-left: 10px;
+.finishScreen[style="top: -200px; opacity: 0;"]{
+    visibility: hidden;
 }
 
 .buttons{
@@ -180,14 +226,15 @@ body{
 }
 
 .game-button {
-    height: 50px;
+    height: 80px;
     width: 150px;
     border-radius: 50px;
     border: none;
     color: white;
+    background-color: white;
     transition: all .2s ease-in-out;
     box-shadow: 3px 3px 35px 4px rgba(0,0,0,0.5);
-    overflow: hidden;
+
 }
 
 .game-button:hover{
@@ -207,6 +254,7 @@ body{
 .right > p{
     transform: rotate(90deg);
 }
+
 
 
 

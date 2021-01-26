@@ -1,26 +1,4 @@
-@font-face {
-    font-family: 'Intro';
-    src: url('Intro-Thin.eot');
-    src: local('Intro-Thin'),
-        url('Intro-Thin.eot?#iefix') format('embedded-opentype'),
-        url('Intro-Thin.woff2') format('woff2'),
-        url('Intro-Thin.woff') format('woff'),
-        url('Intro-Thin.ttf') format('truetype');
-    font-weight: 100;
-    font-style: normal;
-}
 
-@font-face {
-    font-family: 'Intro Thin Caps';
-    src: url('Intro-Thin-Caps.eot');
-    src: local('Intro-Thin-Caps'),
-        url('Intro-Thin-Caps.eot?#iefix') format('embedded-opentype'),
-        url('Intro-Thin-Caps.woff2') format('woff2'),
-        url('Intro-Thin-Caps.woff') format('woff'),
-        url('Intro-Thin-Caps.ttf') format('truetype');
-    font-weight: 100;
-    font-style: normal;
-}
 
 @font-face {
     font-family: 'Intro Black Caps';
