@@ -391,14 +391,14 @@ let moveInterval;
 function gameButtonClick(e){
   let move;
   if(e.target.dataset.direction == 'left'){
-    move = -10;
+    move = -30;
   }
   else{
-    move = 10;
+    move = 30;
   }
   moveInterval = setInterval(() => {
     spaceship.move(move,0,$sizeOfContent.width);
-  }, 1);
+  }, 50);
 }
 
 function clearMoveInterval(){
