@@ -54,8 +54,9 @@ function startGame(){
   allEnemies = [];
   rockets = [];
   explosions = [];
-  $score = 490;
+  $score = 0;
   speedOfEnemies = 1;
+  createEnemyGenerator(1200);
   updateProgressBar();
   updateTextScore();
   $canvasContext.clearRect(0,0,$sizeOfContent.width,$sizeOfContent.height);
@@ -164,15 +165,23 @@ let canvasRepaintController = anime({
 
 let allEnemies = [];
 
-let enemyGenerator = 
-  anime({
+let enemyGenerator;
+
+function createEnemyGenerator(speed){
+  if (enemyGenerator instanceof Object){
+    enemyGenerator.remove(allEnemies);
+  }
+  enemyGenerator = anime({
+    target: allEnemies,
     autoplay: false,
-    duration: 1200,
+    duration: speed,
     loop: true,
     loopBegin(){
       generateEnemy();
     }
-})
+  })
+  enemyGenerator.play();
+}
 
 
 function generateEnemy(){
@@ -276,6 +285,7 @@ function checkColision(){
         rockets.splice(j,1);
         explosions.push(new Explosion(boxEnemy.position));
         updateScoreAndCheckMaxScore(10);
+        createEnemyGenerator(1200 - $score);
         break;
       }
     }
@@ -395,8 +405,15 @@ function clearMoveInterval(){
   clearInterval(moveInterval);
 }
 
-document.body.addEventListener('mousedown',gameButtonClick);
+let buttons = Array.from(document.querySelectorAll('.game-button'));
+for(let i in buttons){
+  buttons[i].addEventListener('mousedown', gameButtonClick);
+  buttons[i].addEventListener('touchstart', gameButtonClick);
+}
+
+
 document.body.addEventListener('mouseup',clearMoveInterval);
+document.body.addEventListener('touchend',clearMoveInterval);
 
 function openBonusSite(){
   document.location.href = 'https://www.olimp.bet/welcome_bonus/';
