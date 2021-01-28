@@ -1,6 +1,5 @@
 import enemies from './Enemies.js';
 import spaceship from './spaceship.js';
-import timer from './timer.js';
 
 
 let $sizeOfContent = {
@@ -237,7 +236,7 @@ function drawRockets(){
 
 let rocketsGenerator = anime({
   autoplay: false,
-  duration:500,
+  duration: 400,
   loop: true,
   loopComplete(){
     rockets.push(new Rocket());
@@ -388,21 +387,35 @@ document.querySelector('.startScreen__button').addEventListener('click',function
 
 
 let moveInterval;
+let isMove = false;
 function gameButtonClick(e){
+  isMove = true;
   let move;
   if(e.target.dataset.direction == 'left'){
-    move = -10;
+    move = -15;
   }
   else{
-    move = 10;
+    move = 15;
   }
-  moveInterval = setInterval(() => {
-    spaceship.move(move,0,$sizeOfContent.width);
-  }, 1);
+
+  moveInterval = anime({
+    target: '.gameButton',
+    loop: true,
+    loopBegin(){
+      generateEnemy();
+    },
+    duration: 20,
+    loopBegin(){
+      spaceship.move(move,0,$sizeOfContent.width);
+    }
+  });
 }
 
 function clearMoveInterval(){
-  clearInterval(moveInterval);
+  if(isMove){
+    moveInterval.remove();
+  }
+  isMove = false;
 }
 
 let buttons = Array.from(document.querySelectorAll('.game-button'));
