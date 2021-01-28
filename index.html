@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>Game</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@700&display=swap" rel="stylesheet"    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -33,20 +35,26 @@
             </div>
             <div class="gameInterface" style="opacity: 0;">
                 <div class="statusBar">
-                    <p id="timer" class="timer">1:00</p>
+                    <p class="status-bar__score">
+                        0 / <span>500<span>₽</span></span>
+                    </p>
+                    <div class="status-bar__progress">
+                        <div class="status-bar__actual-value"></div>
+                    </div>
                 </div>
                 <div class="buttons">
                     <button data-direction="left" click="leftGameButton" class="game-button left">
-                        <p>▲</p>
+                        <p data-direction="left">▲</p>
                     </button>
                     <button data-direction="right" class="game-button right">
-                        <p>▲</p>
+                        <p data-direction="right">▲</p>
                     </button> 
                 </div>
             </div>
             <div class="finish-screen" style="top: -200px; opacity: 0;">
                 <img src="Images/logo.png" alt="" class="logo">
-                <p class="finish-screen__caption"></p>
+                <p class="finish-screen__caption">Вы заработали</p>
+                <p class="finish-screen__money"></p>
                 <p class="finish-screen__text"></p>
                 <button id='freebet' class="startScreen__button">Забрать фрибет</button>
                 <button id='restart' class="startScreen__button">Играть заново</button>

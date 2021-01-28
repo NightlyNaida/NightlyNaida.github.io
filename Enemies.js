@@ -1,8 +1,8 @@
 let pathToImages = 'Images/Enemies/';
 let object = { 
-    Knife(){return new Enemy([73,84],`${pathToImages}Knife.png`)},
-    Striker(){return new Enemy([70,77],`${pathToImages}Striker.png`)},
-    Hunter(){return new Enemy([75,68],`${pathToImages}Hunter.png`)},
+    Knife(){return new Enemy([83,96],`${pathToImages}Knife.png`)},
+    Striker(){return new Enemy([80,88],`${pathToImages}Striker.png`)},
+    Hunter(){return new Enemy([85,79],`${pathToImages}Hunter.png`)},
 }
 
 function Enemy (size,image){

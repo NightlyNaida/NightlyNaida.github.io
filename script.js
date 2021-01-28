@@ -11,8 +11,7 @@ spaceship.moveToCenter($sizeOfContent.width);
 let $canvasContainer = document.querySelector('.canvas-container');
 let $canvas = document.querySelector('canvas');
 let $canvasContext = $canvas.getContext('2d');
-let $timer = null;
-let isWin = true;
+let $score = 0;
 
 window.addEventListener('resize',resizeCanvasContainerAndScaleContent);
 window.addEventListener('load',resizeCanvasContainerAndScaleContent);
@@ -36,20 +35,14 @@ function scaleContent(value){
 
 
 function stopGame(){
-  clearInterval($timer);
-  if(isWin){
-    setWinFinishScreen();
-  }
-  else{
-    setLoseFinishScreen();
-  }
+  prepeareFinishScreen();
+  finishScreenAnimationController.restart();
   canvasAnimationController.restart();
   gameControlAnimationController.restart();
   actionBackgroundAnimationController.restart();
-  canvasRepaintController.pause();
   enemyGenerator.pause();
-  finishScreenAnimationController.restart();
   rocketsGenerator.pause();
+  canvasRepaintController.pause();
 }
 
 function restartGame(){
@@ -61,6 +54,10 @@ function startGame(){
   allEnemies = [];
   rockets = [];
   explosions = [];
+  $score = 490;
+  speedOfEnemies = 1;
+  updateProgressBar();
+  updateTextScore();
   $canvasContext.clearRect(0,0,$sizeOfContent.width,$sizeOfContent.height);
   canvasAnimationController.restart();
   gameControlAnimationController.restart();
@@ -68,8 +65,6 @@ function startGame(){
   spawnSpaceshipAndLaunchRockets();
   canvasRepaintController.restart();
   enemyGenerator.restart();
-  var deadline = new Date(Date.parse(new Date()) + 60 * 1000);
-  $timer = timer('timer', deadline, stopGame);
   speedOfEnemies = 1;
 }
 
@@ -91,7 +86,7 @@ let finishScreenAnimationController = anime({
   easing: 'easeInOutCubic',
   top: 0,
   opacity: 1,
-  duration: 1500,
+  duration: 1000,
   complete(){
     this.reverse();
   }
@@ -253,7 +248,6 @@ function checkRocketsForStayingInGameArea(){
 function checkColision(){
   for(let i in allEnemies){
     if (allEnemies[i].y + allEnemies[i].height > $sizeOfContent.height){
-      isWin = false;
       stopGame();
       break;
     }
@@ -272,9 +266,8 @@ function checkColision(){
 
       if(boxCollides(boxEnemy.position,boxEnemy.size,[spaceship.x,spaceship.y],[spaceship.width,spaceship.height])){
         explosions.push(new Explosion([spaceship.x,spaceship.y]));
-        isWin = false;
-        clearInterval($timer);
-        setTimeout(stopGame,1000);
+        spaceship.y = 3000;
+        setTimeout(stopGame,300);
         break;
       }
 
@@ -282,6 +275,7 @@ function checkColision(){
         allEnemies.splice(i,1);
         rockets.splice(j,1);
         explosions.push(new Explosion(boxEnemy.position));
+        updateScoreAndCheckMaxScore(10);
         break;
       }
     }
@@ -300,21 +294,34 @@ function collides(x, y, r, b, x2, y2, r2, b2) {
            b <= y2 || y > b2);
 }
 
-
-function setWinFinishScreen(){
-  let mainCaption = document.querySelector('.finish-screen__caption');
-  let text = document.querySelector('.finish-screen__text');
-
-  mainCaption.innerText = 'Круто!';
-  text.innerText = 'Да ты прирожденный чемпион. Забирай фрибет и побеждай на Олимпе!';
+function updateScoreAndCheckMaxScore(value){
+  if (typeof value == 'number'){
+    $score += value;
+  }
+  if($score >= 500){
+    stopGame();
+  }
+  updateTextScore();
+  updateProgressBar();
 }
 
-function setLoseFinishScreen(){
-  let mainCaption = document.querySelector('.finish-screen__caption');
-  let text = document.querySelector('.finish-screen__text');
+function updateTextScore(){
+  let scoreDOM = document.querySelector('.status-bar__score');
+  scoreDOM.innerHTML = `${$score} / <span>500<span>₽</span></span>`;
+}
 
-  mainCaption.innerText = 'Поражение';
-  text.innerHTML = 'Как сказал мудрец:<br><i>«Не повезло в мини-игре, повезёт в ставках на спорт...».</i><br>Забирай фрибет и побеждай на Олимпе!';
+function updateProgressBar(){
+  let progressDOM = document.querySelector('.status-bar__actual-value');
+  let width = $score / 500* 100;
+  progressDOM.style.width = `${width}%`;
+}
+
+
+function prepeareFinishScreen(){
+  let moneyDOM = document.querySelector('.finish-screen__money');
+  let textDOM = document.querySelector('.finish-screen__text');
+  moneyDOM.innerText = `${$score}₽`;
+  textDOM.innerText = 'Забирай фрибет и побеждай на Олимпе!';
 }
 
 let explosionSprite = new Image();
@@ -369,19 +376,27 @@ document.querySelector('.startScreen__button').addEventListener('click',function
   startGame();
 });
 
+
+let moveInterval;
 function gameButtonClick(e){
-  if(e.currentTarget.dataset.direction == 'left'){
-    spaceship.move(-30,0,$sizeOfContent.width);
+  let move;
+  if(e.target.dataset.direction == 'left'){
+    move = -10;
   }
   else{
-    spaceship.move(30,0,$sizeOfContent.width);
+    move = 10;
   }
+  moveInterval = setInterval(() => {
+    spaceship.move(move,0,$sizeOfContent.width);
+  }, 1);
 }
 
-let gameButtons = Array.from(document.querySelectorAll('.game-button'));
-for(let i in gameButtons){
-  gameButtons[i].addEventListener('mousedown',gameButtonClick);
+function clearMoveInterval(){
+  clearInterval(moveInterval);
 }
+
+document.body.addEventListener('mousedown',gameButtonClick);
+document.body.addEventListener('mouseup',clearMoveInterval);
 
 function openBonusSite(){
   document.location.href = 'https://www.olimp.bet/welcome_bonus/';
