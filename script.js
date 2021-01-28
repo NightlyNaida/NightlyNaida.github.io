@@ -54,7 +54,7 @@ function startGame(){
   allEnemies = [];
   rockets = [];
   explosions = [];
-  $score = 490;
+  $score = 0;
   speedOfEnemies = 1;
   updateProgressBar();
   updateTextScore();
