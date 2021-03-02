@@ -418,6 +418,10 @@ function clearMoveInterval(){
   isMove = false;
 }
 
+function closeWindow(){
+  window.top.postMessage('close-window','*');
+}
+
 let buttons = Array.from(document.querySelectorAll('.game-button'));
 for(let i in buttons){
   buttons[i].addEventListener('mousedown', gameButtonClick);
@@ -429,11 +433,13 @@ document.body.addEventListener('mouseup',clearMoveInterval);
 document.body.addEventListener('touchend',clearMoveInterval);
 
 function openBonusSite(){
-  document.location.href = 'https://www.olimp.bet/welcome_bonus/';
+  let link = 'https://www.olimp.bet/promo/welcome_bonus/?utm_source=sports.ru&utm_medium=banner&utm_campaign=banner_sports.ru_rkolimp_catfish-game&utm_content=catfish-game&utm_term=all_land-wby_game';
+  document.location.href = link
 }
 
 document.querySelector('#restart').addEventListener('click',restartGame);
 document.querySelector('#freebet').addEventListener('click',openBonusSite);
+document.querySelector('.close-button').addEventListener('click',closeWindow);
 
 
 
