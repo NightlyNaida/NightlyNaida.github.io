@@ -16,6 +16,10 @@ let spaceship = {
     if(potentialPosition <= widthOfCanvas-this.width && potentialPosition >= 0){
       this.x += x;
       this.y += y;
+      return true;
+    }
+    else{
+      return false;
     }
   },
   moveToCenter(width){
