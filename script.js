@@ -17,10 +17,20 @@ window.addEventListener('load',resizeCanvasContainerAndScaleContent);
 
 function resizeCanvasContainerAndScaleContent(){
   let ratio = 1 / 2;
-  $canvasContainer.style.height = `${window.innerHeight}px`;
-  $canvasContainer.style.width = `${window.innerHeight * ratio}px`;
+  let height = window.innerHeight;
+  let width = window.innerHeight * ratio;
+  
+  if (width > window.innerWidth){
+    width = window.innerWidth;
+    height = window.innerWidth / ratio;
+  }
 
-  let scaleValueForContent = window.innerHeight / $sizeOfContent.height;
+  $canvasContainer.style.height = `${height}px`;
+  $canvasContainer.style.width = `${width}px`;
+
+  
+
+  let scaleValueForContent = height / $sizeOfContent.height;
   scaleContent(scaleValueForContent);
 }
 
