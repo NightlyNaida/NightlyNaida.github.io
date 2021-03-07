@@ -17,6 +17,7 @@ window.addEventListener('load',resizeCanvasContainerAndScaleContent);
 
 function resizeCanvasContainerAndScaleContent(){
   let ratio = 1 / 2;
+
   $canvasContainer.style.height = `${window.innerHeight}px`;
   $canvasContainer.style.width = `${window.innerHeight * ratio}px`;
 
@@ -387,9 +388,7 @@ document.querySelector('.startScreen__button').addEventListener('click',function
 
 
 let moveInterval;
-let isMove = false;
 function gameButtonClick(e){
-  isMove = true;
   let move;
   if(e.target.dataset.direction == 'left'){
     move = -15;
@@ -412,10 +411,9 @@ function gameButtonClick(e){
 }
 
 function clearMoveInterval(){
-  if(isMove){
+  if(moveInterval){
     moveInterval.remove();
   }
-  isMove = false;
 }
 
 function closeWindow(){
