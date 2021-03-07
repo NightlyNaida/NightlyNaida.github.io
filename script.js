@@ -17,11 +17,20 @@ window.addEventListener('load',resizeCanvasContainerAndScaleContent);
 
 function resizeCanvasContainerAndScaleContent(){
   let ratio = 1 / 2;
+  let height = window.innerHeight;
+  let width = window.innerHeight * ratio;
+  
+  if (width > window.innerWidth){
+    width = window.innerWidth;
+    height = window.innerWidth / ratio;
+  }
 
-  $canvasContainer.style.height = `${window.innerHeight}px`;
-  $canvasContainer.style.width = `${window.innerHeight * ratio}px`;
+  $canvasContainer.style.height = `${height}px`;
+  $canvasContainer.style.width = `${width}px`;
 
-  let scaleValueForContent = window.innerHeight / $sizeOfContent.height;
+  
+
+  let scaleValueForContent = height / $sizeOfContent.height;
   scaleContent(scaleValueForContent);
 }
 
@@ -376,8 +385,14 @@ function checkExplosionEnd(){
 window.addEventListener('keydown', keyPress);
 function keyPress (e){
     switch(e.code){
-        case 'ArrowLeft': spaceship.move(-30,0,$sizeOfContent.width); break;
-        case 'ArrowRight': spaceship.move(30,0,$sizeOfContent.width); break;
+        case 'ArrowLeft': {
+          let isMove = spaceship.move(-30,0,$sizeOfContent.width);
+          if(!isMove){clearMoveInterval()};
+        } break;
+        case 'ArrowRight': {
+          let isMove = spaceship.move(30,0,$sizeOfContent.width);
+          if(isMove){clearMoveInterval()};
+        } break;
     }
 }
 
@@ -400,9 +415,6 @@ function gameButtonClick(e){
   moveInterval = anime({
     target: '.gameButton',
     loop: true,
-    loopBegin(){
-      generateEnemy();
-    },
     duration: 20,
     loopBegin(){
       spaceship.move(move,0,$sizeOfContent.width);
@@ -429,6 +441,7 @@ for(let i in buttons){
 
 document.body.addEventListener('mouseup',clearMoveInterval);
 document.body.addEventListener('touchend',clearMoveInterval);
+
 
 function openBonusSite(){
   let link = 'https://www.olimp.bet/promo/welcome_bonus/?utm_source=sports.ru&utm_medium=banner&utm_campaign=banner_sports.ru_rkolimp_catfish-game&utm_content=catfish-game&utm_term=all_land-wby_game';
