@@ -412,20 +412,11 @@ function gameButtonClick(e){
     move = 15;
   }
 
-  moveInterval = anime({
-    target: '.gameButton',
-    loop: true,
-    duration: 20,
-    loopBegin(){
-      spaceship.move(move,0,$sizeOfContent.width);
-    }
-  });
+  moveInterval = setInterval(function(){spaceship.move(move,0,$sizeOfContent.width);},20);
 }
 
 function clearMoveInterval(){
-  if(moveInterval){
-    moveInterval.remove();
-  }
+  clearInterval(moveInterval);
 }
 
 function closeWindow(){
