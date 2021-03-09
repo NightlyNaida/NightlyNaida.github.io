@@ -404,6 +404,7 @@ document.querySelector('.startScreen__button').addEventListener('click',function
 
 let moveInterval;
 function gameButtonClick(e){
+  clearInterval();
   let move;
   if(e.target.dataset.direction == 'left'){
     move = -15;
@@ -416,7 +417,12 @@ function gameButtonClick(e){
 }
 
 function clearMoveInterval(){
-  clearInterval(moveInterval);
+  try{
+    clearInterval(moveInterval);
+  }
+  catch{
+
+  }
 }
 
 function closeWindow(){
