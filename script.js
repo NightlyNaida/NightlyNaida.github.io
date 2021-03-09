@@ -404,7 +404,7 @@ document.querySelector('.startScreen__button').addEventListener('click',function
 
 let moveInterval;
 function gameButtonClick(e){
-  clearInterval();
+  clearMoveInterval();
   let move;
   if(e.target.dataset.direction == 'left'){
     move = -15;
