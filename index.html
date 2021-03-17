@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>Game</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@700&display=swap" rel="stylesheet"    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -26,7 +27,11 @@
         </div>
         <canvas width="500" height="1000" class="action" style="opacity: 0;"></canvas>
         <div class="interface">
-            <button class="close-button"></button>
+            <button class="close-button">
+                <svg viewBox="0 0 329.26933 329" xmlns="http://www.w3.org/2000/svg">
+                    <path d="m194.800781 164.769531 128.210938-128.214843c8.34375-8.339844 8.34375-21.824219 0-30.164063-8.339844-8.339844-21.824219-8.339844-30.164063 0l-128.214844 128.214844-128.210937-128.214844c-8.34375-8.339844-21.824219-8.339844-30.164063 0-8.34375 8.339844-8.34375 21.824219 0 30.164063l128.210938 128.214843-128.210938 128.214844c-8.34375 8.339844-8.34375 21.824219 0 30.164063 4.15625 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921875-2.089844 15.082031-6.25l128.210937-128.214844 128.214844 128.214844c4.160156 4.160156 9.621094 6.25 15.082032 6.25 5.460937 0 10.921874-2.089844 15.082031-6.25 8.34375-8.339844 8.34375-21.824219 0-30.164063zm0 0"/>
+                </svg>
+            </button>
             <div class="startScreen">
                 <img src="Images/logo.png" alt="" class="logo">
                 <p class="startScreen__caption startScreen__caption-first">Продержись минуту</p>
@@ -63,6 +68,6 @@
         </div>
     </div>
     <script src="anime.min.js"></script>
-    <script src="script.js" type="module"></script>
+    <script src="resizePageAndLoadScript.js"></script>
 </body>
 </html>

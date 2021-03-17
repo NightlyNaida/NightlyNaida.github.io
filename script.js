@@ -12,36 +12,6 @@ let $canvas = document.querySelector('canvas');
 let $canvasContext = $canvas.getContext('2d');
 let $score = 0;
 
-window.addEventListener('resize',resizeCanvasContainerAndScaleContent);
-window.addEventListener('load',resizeCanvasContainerAndScaleContent);
-
-function resizeCanvasContainerAndScaleContent(){
-  let ratio = 1 / 2;
-  let height = window.innerHeight;
-  let width = window.innerHeight * ratio;
-  
-  if (width > window.innerWidth){
-    width = window.innerWidth;
-    height = window.innerWidth / ratio;
-  }
-
-  $canvasContainer.style.height = `${height}px`;
-  $canvasContainer.style.width = `${width}px`;
-
-  
-
-  let scaleValueForContent = height / $sizeOfContent.height;
-  scaleContent(scaleValueForContent);
-}
-
-
-function scaleContent(value){
-  let items = Array.from(document.querySelectorAll('.canvas-container > *'));
-  for (let i in items){
-    items[i].style.transform = `scale(${value})`;
-  }
-}
-
 
 function stopGame(){
   prepeareFinishScreen();
@@ -449,8 +419,21 @@ document.querySelector('#restart').addEventListener('click',restartGame);
 document.querySelector('#freebet').addEventListener('click',openBonusSite);
 document.querySelector('.close-button').addEventListener('click',closeWindow);
 
+setImageWithStarsToBackground();
 
 
+function setImageWithStarsToBackground(){
+  let nearlyStars = Array.from(document.querySelectorAll('.nearlyStars > div'));
+  let distanceStars = Array.from(document.querySelectorAll('.distantStars > div'));
+  
+  for(let i = 0; i < nearlyStars.length; i++){
+    nearlyStars[i].style.backgroundImage = "url('Images/StarsLarge.png')"
+  }
+
+  for(let i = 0; i < distanceStars.length; i++){
+    distanceStars[i].style.backgroundImage = "url('Images/StarsSmall.png')"
+  }
+}
 
 
 
