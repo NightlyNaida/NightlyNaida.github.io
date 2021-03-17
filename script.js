@@ -377,8 +377,15 @@ document.querySelector('.gameInterface').addEventListener('touchstart',gameInter
 let moveInterval;
 function gameInterfaceClick(e){
   clearMoveInterval();
+  let currentClickCoordinate;
+  if(e.touches){
+    currentClickCoordinate = e.touches[0].clientX;
+  }
+  else{
+    currentClickCoordinate = e.clientX;
+  }
   let move;
-  if(e.clientX < window.innerWidth / 2){
+  if(currentClickCoordinate < window.innerWidth / 2){
     move = -15;
   }
   else{
