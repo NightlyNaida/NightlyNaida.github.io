@@ -372,11 +372,13 @@ document.querySelector('.startScreen__button').addEventListener('click',function
 });
 
 
+document.querySelector('.gameInterface').addEventListener('mousedown', gameInterfaceClick);
+document.querySelector('.gameInterface').addEventListener('touchstart',gameInterfaceClick);
 let moveInterval;
-function gameButtonClick(e){
+function gameInterfaceClick(e){
   clearMoveInterval();
   let move;
-  if(e.target.dataset.direction == 'left'){
+  if(e.clientX < window.innerWidth / 2){
     move = -15;
   }
   else{
@@ -395,19 +397,13 @@ function clearMoveInterval(){
   }
 }
 
+document.body.addEventListener('mouseup',clearMoveInterval);
+document.body.addEventListener('touchend',clearMoveInterval);
+
+
 function closeWindow(){
   window.top.postMessage('close-window','*');
 }
-
-let buttons = Array.from(document.querySelectorAll('.game-button'));
-for(let i in buttons){
-  buttons[i].addEventListener('mousedown', gameButtonClick);
-  buttons[i].addEventListener('touchstart', gameButtonClick);
-}
-
-
-document.body.addEventListener('mouseup',clearMoveInterval);
-document.body.addEventListener('touchend',clearMoveInterval);
 
 
 function openBonusSite(){
@@ -434,10 +430,6 @@ function setImageWithStarsToBackground(){
     distanceStars[i].style.backgroundImage = "url('Images/StarsSmall.png')"
   }
 }
-
-
-
-
 
 
 
