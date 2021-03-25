@@ -414,8 +414,7 @@ function closeWindow(){
 
 
 function openBonusSite(){
-  let link = 'https://www.olimp.bet/promo/welcome_bonus/?utm_source=sports.ru&utm_medium=banner&utm_campaign=banner_sports.ru_rkolimp_catfish-game&utm_content=catfish-game&utm_term=all_land-wby_game';
-  document.location.href = link
+  window.open('https://www.olimp.bet/promo/welcome_bonus/?utm_source=sports.ru&utm_medium=banner&utm_campaign=banner_sports.ru_rkolimp_catfish-game&utm_content=catfish-game&utm_term=all_land-wby_game', '_blank');
 }
 
 document.querySelector('#restart').addEventListener('click',restartGame);
