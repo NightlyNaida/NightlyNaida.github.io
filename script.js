@@ -12,36 +12,6 @@ let $canvas = document.querySelector('canvas');
 let $canvasContext = $canvas.getContext('2d');
 let $score = 0;
 
-window.addEventListener('resize',resizeCanvasContainerAndScaleContent);
-window.addEventListener('load',resizeCanvasContainerAndScaleContent);
-
-function resizeCanvasContainerAndScaleContent(){
-  let ratio = 1 / 2;
-  let height = window.innerHeight;
-  let width = window.innerHeight * ratio;
-  
-  if (width > window.innerWidth){
-    width = window.innerWidth;
-    height = window.innerWidth / ratio;
-  }
-
-  $canvasContainer.style.height = `${height}px`;
-  $canvasContainer.style.width = `${width}px`;
-
-  
-
-  let scaleValueForContent = height / $sizeOfContent.height;
-  scaleContent(scaleValueForContent);
-}
-
-
-function scaleContent(value){
-  let items = Array.from(document.querySelectorAll('.canvas-container > *'));
-  for (let i in items){
-    items[i].style.transform = `scale(${value})`;
-  }
-}
-
 
 function stopGame(){
   prepeareFinishScreen();
@@ -54,7 +24,12 @@ function stopGame(){
   canvasRepaintController.pause();
 }
 
-function restartGame(){
+function restartGame(e){
+  e.currentTarget.disabled = true;
+  let button = e.currentTarget;
+  setTimeout(function(){
+    button.disabled = false;
+  },2000);
   finishScreenAnimationController.restart();
   startGame();
 }
@@ -314,7 +289,7 @@ function collides(x, y, r, b, x2, y2, r2, b2) {
 }
 
 function updateScoreAndCheckMaxScore(value){
-  if (typeof value == 'number'){
+  if (typeof value == 'number' && $score + value < 500){
     $score += value;
   }
   if($score >= 500){
@@ -402,65 +377,65 @@ document.querySelector('.startScreen__button').addEventListener('click',function
 });
 
 
+document.querySelector('.gameInterface').addEventListener('mousedown', gameInterfaceClick);
+document.querySelector('.gameInterface').addEventListener('touchstart',gameInterfaceClick);
 let moveInterval;
-let isMove = false;
-function gameButtonClick(e){
-  isMove = true;
+function gameInterfaceClick(e){
+  clearMoveInterval();
+  let currentClickCoordinate;
+  if(e.touches){
+    currentClickCoordinate = e.touches[0].clientX;
+  }
+  else{
+    currentClickCoordinate = e.clientX;
+  }
   let move;
-  if(e.target.dataset.direction == 'left'){
+  if(currentClickCoordinate < window.innerWidth / 2){
     move = -15;
   }
   else{
     move = 15;
   }
 
-  moveInterval = anime({
-    target: '.gameButton',
-    loop: true,
-    duration: 20,
-    loopBegin(){
-      spaceship.move(move,0,$sizeOfContent.width);
-    }
-  });
+  moveInterval = setInterval(function(){spaceship.move(move,0,$sizeOfContent.width);},20);
 }
 
 function clearMoveInterval(){
-  if(isMove){
-    moveInterval.remove();
+  try{
+    clearInterval(moveInterval);
   }
-  isMove = false;
-}
+  catch{
 
-function closeWindow(){
-  window.top.postMessage('close-window','*');
+  }
 }
-
-let buttons = Array.from(document.querySelectorAll('.game-button'));
-for(let i in buttons){
-  buttons[i].addEventListener('mousedown', gameButtonClick);
-  buttons[i].addEventListener('touchstart', gameButtonClick);
-}
-
 
 document.body.addEventListener('mouseup',clearMoveInterval);
 document.body.addEventListener('touchend',clearMoveInterval);
 
 
+
 function openBonusSite(){
-  let link = 'https://www.olimp.bet/promo/welcome_bonus/?utm_source=sports.ru&utm_medium=banner&utm_campaign=banner_sports.ru_rkolimp_catfish-game&utm_content=catfish-game&utm_term=all_land-wby_game';
-  document.location.href = link
+  window.open('https://www.olimp.bet/promo/welcome_bonus/?utm_source=sports.ru&utm_medium=banner&utm_campaign=banner_sports.ru_rkolimp_catfish-game&utm_content=catfish-game&utm_term=all_land-wby_game', '_blank');
 }
 
 document.querySelector('#restart').addEventListener('click',restartGame);
 document.querySelector('#freebet').addEventListener('click',openBonusSite);
-document.querySelector('.close-button').addEventListener('click',closeWindow);
+
+setImageWithStarsToBackground();
 
 
+function setImageWithStarsToBackground(){
+  let nearlyStars = Array.from(document.querySelectorAll('.nearlyStars > div'));
+  let distanceStars = Array.from(document.querySelectorAll('.distantStars > div'));
+  
+  for(let i = 0; i < nearlyStars.length; i++){
+    nearlyStars[i].style.backgroundImage = "url('Images/StarsLarge.png')"
+  }
 
-
-
-
-
+  for(let i = 0; i < distanceStars.length; i++){
+    distanceStars[i].style.backgroundImage = "url('Images/StarsSmall.png')"
+  }
+}
 
 
 

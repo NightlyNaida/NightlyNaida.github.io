@@ -5,10 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <title>Game</title>
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@700&display=swap" rel="stylesheet"    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Vadodara:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+    (window, document, "script", "https://cdn.jsdelivr.net/npm/yandex-metrica-watch/tag.js", "ym");
+ 
+    ym(43975884, "init", {
+         clickmap:true,
+         trackLinks:true,
+         accurateTrackBounce:true,
+         trackHash:true,
+         ecommerce:"dataLayer"
+    });
+ </script>
+ <noscript><div><img src="https://mc.yandex.ru/watch/43975884" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+ <!-- /Yandex.Metrika counter -->
     <div class="canvas-container">
         <div class="background">
             <div class="actionBackground">
@@ -26,7 +43,6 @@
         </div>
         <canvas width="500" height="1000" class="action" style="opacity: 0;"></canvas>
         <div class="interface">
-            <button class="close-button"></button>
             <div class="startScreen">
                 <img src="Images/logo.png" alt="" class="logo">
                 <p class="startScreen__caption startScreen__caption-first">Продержись минуту</p>
@@ -63,6 +79,7 @@
         </div>
     </div>
     <script src="anime.min.js"></script>
-    <script src="script.js" type="module"></script>
+    <script src="resizePageAndLoadScript.js"></script>
+    
 </body>
 </html>

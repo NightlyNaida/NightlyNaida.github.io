@@ -1,16 +1,22 @@
 let pathToImages = 'Images/Enemies/';
-let object = { 
-    Knife(){return new Enemy([83,96],`${pathToImages}Knife.png`)},
-    Striker(){return new Enemy([80,88],`${pathToImages}Striker.png`)},
-    Hunter(){return new Enemy([85,79],`${pathToImages}Hunter.png`)},
+let images = {
+    striker: initImage(`${pathToImages}Striker.png`),
+    knife: initImage(`${pathToImages}Knife.png`),
+    hunter: initImage (`${pathToImages}Hunter.png`)
 }
 
-function Enemy (size,image){
+let object = { 
+    Knife(){return new Enemy([83,96],`knife`)},
+    Striker(){return new Enemy([80,88],`striker`)},
+    Hunter(){return new Enemy([85,79],`hunter`)},
+}
+
+function Enemy (size,type){
     this.x = 0;
     this.y = -60;
     this.width = size[0];
     this.height = size[1];
-    this.image = initImage(image);
+    this.image = images[type];
 }
 
 Enemy.prototype = {
